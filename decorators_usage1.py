@@ -12,5 +12,5 @@ def counting(a, b):
     result = a + b
     return result
 
-x = counting(1, -3)
+x = counting(1, 3)
 print('x = {}'.format(x))
