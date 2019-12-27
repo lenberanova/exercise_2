@@ -1,6 +1,6 @@
 from contextlib import contextmanager
 from collections import OrderedDict
-from xml.etree.ElementTree import Element
+import xml.etree.cElementTree as ET
 
 
 @contextmanager
@@ -8,6 +8,7 @@ def open_file(file_name, mode):
     file = open(file_name, mode)
     yield file
     file.close()
+
 
 def get_dict_of_words_from_string(resource_string):
     all_words = {}
@@ -39,20 +40,34 @@ def get_dict_of_words_from_string(resource_string):
 
 def order_dict_by_value(resource_dict):
     ordered_dict = OrderedDict(sorted(resource_dict.items(), key=lambda x: x[1], reverse=True))
-    print(ordered_dict)
-    # list of keys
-    ordered_dict_keys = ordered_dict.keys()
-    for item in ordered_dict_keys:
-        print(item, ordered_dict[item])
     return ordered_dict
 
 
-with open_file('rur.txt', 'r') as resource:
+def convert_dict_to_xml(resource_dict, xml_file_name):
+    root = ET.Element('root')
+    word = ET.SubElement(root, 'word')
+    field_counter = 0
+    for key, val in resource_dict.items():
+        field_counter += 1
+        ET.SubElement(word, ('field'+str(field_counter)), name=key).text = str(val)
+
+    tree = ET.ElementTree(root)
+    xml_output_file = tree.write(xml_file_name, xml_declaration=True, encoding='utf-8')
+    return xml_output_file
+
+
+def transdorm_text_to_xml(text_file_name, xml_file_name):
+    with open_file(text_file_name, 'r') as resource:
+        file_content = resource.read()
+        resource.close()
+
+    words_from_file = get_dict_of_words_from_string(file_content)
+    ordered_dict_words = order_dict_by_value(words_from_file)
+    convert_dict_to_xml(ordered_dict_words, xml_file_name)
+
+
+transdorm_text_to_xml('rur.txt', 'rur.xml')
+
+with open_file('rur.xml', 'r') as resource:
     file_content = resource.read()
     resource.close()
-
-words_from_file = get_dict_of_words_from_string(file_content)
-ordered_dict_words_from_file = order_dict_by_value(words_from_file)
-
-
-
