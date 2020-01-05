@@ -1,0 +1,28 @@
+from random import randrange
+
+def ean_13_calculator():
+    list_12 = [randrange(10) for digit in range(12)]
+
+    odd_sum = 0
+    even_sum = 0
+    for pos, val in enumerate(list_12, 1):
+        # even pos using enumerate from left side = correctly odd pos from the right side
+        if pos % 2 == 0:
+            odd_sum += val
+        else:
+            even_sum += val
+
+    first_12_digits = ''.join([str(elem) for elem in list_12])
+
+    checksum_digit = (10 - ((3 * odd_sum + even_sum) % 10)) % 10
+
+    ean_13_code = first_12_digits + str(checksum_digit)
+    return ean_13_code
+
+
+with open('EAN13_codes.txt', 'w+') as file:
+    for i in range(100):
+        ean13 = ean_13_calculator()
+        file.write(ean13)
+        file.write('\n')
+    file.close()
