@@ -1,0 +1,51 @@
+from random import randrange
+
+
+def birth_number_calculator(data_dict):
+    data_dict = data_dict.copy()
+    data_dict['year_cut'] = data_dict['year'] - data_dict['year'] // 100 * 100
+    if data_dict['is_female']:
+        data_dict['month'] += 70
+    else:
+        data_dict['month'] += 20
+
+    first_part = '{year_cut:02}{month:02}{day:02}'.format(**data_dict)
+
+    random_number = randrange(0, 999)
+    second_part = '{:03}'.format(random_number)
+
+    first_and_second_part = first_part + second_part
+
+    if data_dict['year'] <= 1953:
+        birth_number = str(first_and_second_part)
+
+    else:
+        last_digit = str(int(first_and_second_part) % 11)
+
+        if int(last_digit) == 10:
+            second_part_new = '{:03}'.format(random_number + 1)
+            birth_number = '{}{}{}'.format(first_part, second_part_new, 0)
+        else:
+            birth_number = '{}{}'.format(first_and_second_part, last_digit)
+
+    return birth_number
+
+
+def birth_date_calculator(data_dict):
+    date = str(data_dict['day']).zfill(2) + '.' + str(data_dict['month']).zfill(2) + '.' + str(data_dict['year'])
+    return date
+
+
+def sex_identifier(data_dict):
+    return 'female' if data_dict['is_female'] == True else 'male'
+
+
+data_user = {'day':16, 'month': 10, 'year': 1990, 'is_female': True}
+
+with open('birth_number.txt', 'w+') as file:
+    calculated_birth_day = birth_date_calculator(data_user)
+    file.write(calculated_birth_day + 3 * ' ' + sex_identifier(data_user) + 2 *'\n')
+    for i in range(100):
+        calculated_birth_number = birth_number_calculator(data_user)
+        file.write(calculated_birth_number + '\n')
+    file.close()
