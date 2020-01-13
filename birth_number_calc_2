@@ -11,22 +11,22 @@ def birth_number_calculator(data_dict):
 
     first_part = '{year_cut:02}{month:02}{day:02}'.format(**data_dict)
 
-    random_number = randrange(0, 999)
+    random_number = randrange(0, 998)
     second_part = '{:03}'.format(random_number)
 
-    first_and_second_part = first_part + second_part
+    first_10d = first_part + second_part
 
     if data_dict['year'] <= 1953:
-        birth_number = str(first_and_second_part)
+        birth_number = data_dict['first_10d']
 
     else:
-        last_digit = str(int(first_and_second_part) % 11)
+        last_digit = str(int(first_10d) % 11)
 
         if int(last_digit) == 10:
             second_part_new = '{:03}'.format(random_number + 1)
             birth_number = '{}{}{}'.format(first_part, second_part_new, 0)
         else:
-            birth_number = '{}{}'.format(first_and_second_part, last_digit)
+            birth_number = '{}{}'.format(first_10d, last_digit)
 
     return birth_number
 
