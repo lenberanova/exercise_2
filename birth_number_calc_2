@@ -32,7 +32,7 @@ def birth_number_calculator(data_dict):
 
 
 def birth_date_calculator(data_dict):
-    date = str(data_dict['day']).zfill(2) + '.' + str(data_dict['month']).zfill(2) + '.' + str(data_dict['year'])
+    date = '{day:02}.{month:02}.{year}'.format(**data_dict)
     return date
 
 
