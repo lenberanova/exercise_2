@@ -30,7 +30,7 @@ def pesel_calculator(data_dict):
     for pos, val in enumerate(data_dict['first_10d']):
         check_sum += int(val) * multiplicators[pos]
 
-    data_dict['check_digit'] = (10 - (check_sum % 10)) if check_sum != 0 else 0
+    data_dict['check_digit'] = (10 - (check_sum % 10)) if check_sum % 10 != 0 else 0
 
     pesel_number = '{first_10d}{check_digit}'.format(**data_dict)
 
